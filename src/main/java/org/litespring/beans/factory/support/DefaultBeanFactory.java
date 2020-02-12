@@ -1,6 +1,8 @@
 package org.litespring.beans.factory.support;
 
 import org.litespring.beans.BeanDefinition;
+import org.litespring.beans.factory.BeanCreationException;
+import org.litespring.beans.factory.BeanDefinitionStoreException;
 import org.litespring.beans.factory.BeanFactory;
 
 import java.util.Map;
@@ -46,8 +48,7 @@ public class DefaultBeanFactory implements BeanFactory {
                 this.beanDefinitionMap.put(id, bd);
             }
         } catch (DocumentException e) {
-            //TODO 抛出异常
-            e.printStackTrace();
+            throw new BeanDefinitionStoreException("IOException parsing XML document from " + configFile,e);
         } finally {
             if (is != null) {
                 try {
@@ -71,23 +72,16 @@ public class DefaultBeanFactory implements BeanFactory {
     public Object getBean(String beanID) {
         BeanDefinition bd = this.getBeanDefinition(beanID);
         if (bd == null) {
-            return null;
+            throw new BeanCreationException("Bean Definition does not exist");
         }
         ClassLoader cl = ClassUtils.getDefaultClassLoader();
         String beanClassName = bd.getBeanClassName();
         try {
             Class<?> clz = cl.loadClass(beanClassName);
             return clz.newInstance();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new BeanCreationException("create bean for " + beanClassName + " failed", e);
         }
-        return null;
     }
 }
 
