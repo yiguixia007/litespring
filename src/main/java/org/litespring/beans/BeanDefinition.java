@@ -1,4 +1,4 @@
-package org.litespring.beans.factory;
+package org.litespring.beans;
 
 public interface BeanDefinition {
     String getBeanClassName();
