@@ -7,19 +7,14 @@ import org.litespring.context.ApplicationContext;
 import org.litespring.core.io.ClassPathResource;
 import org.litespring.core.io.Resource;
 
-public class ClassPathXmlApplicationContext implements ApplicationContext {
-
-    private DefaultBeanFactory factory = null;
+public class ClassPathXmlApplicationContext extends AbstractApplicationContext{
 
     public ClassPathXmlApplicationContext(String configFile){
-        factory = new DefaultBeanFactory();
-        XMLBeanDefinitionReader reader = new XMLBeanDefinitionReader(factory);
-        Resource resource = new ClassPathResource(configFile);
-        reader.loadBeanDefinitions(resource);
+        super(configFile);
     }
 
-    public Object getBean(String beanID) {
-        return factory.getBean(beanID);
+    public Resource getResourceByPath(String path) {
+        return new ClassPathResource(path);
     }
 
 }
