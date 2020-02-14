@@ -10,6 +10,7 @@ import org.litespring.beans.factory.BeanFactory;
 import org.litespring.beans.factory.support.BeanDefinitionRegistry;
 import org.litespring.beans.factory.support.DefaultBeanFactory;
 import org.litespring.beans.factory.xml.XMLBeanDefinitionReader;
+import org.litespring.core.io.ClassPathResource;
 import org.litespring.service.v1.PetStoreService;
 
 
@@ -35,7 +36,7 @@ public class BeanFactoryTest {
     @Test
     public void testGetBean(){
         // 1、获取bean的定义
-        reader.loadBeanDefinitions("petstore-v1.xml");
+        reader.loadBeanDefinitions(new ClassPathResource("petstore-v1.xml"));
         BeanDefinition bd = factory.getBeanDefinition("petStore");
 
         // 2、判断与xml文件ClassName是否相等
@@ -53,7 +54,7 @@ public class BeanFactoryTest {
      */
     @Test
     public void testInvalidBean(){
-        reader.loadBeanDefinitions("petstore-v1.xml");
+        reader.loadBeanDefinitions(new ClassPathResource("petstore-v1.xml"));
 
         try {
             factory.getBean("invalidBean");
@@ -72,7 +73,7 @@ public class BeanFactoryTest {
     public void testInvalidXML(){
 
         try {
-            reader.loadBeanDefinitions("xxx.xml");
+            reader.loadBeanDefinitions(new ClassPathResource("xxx.xml"));
         } catch (BeanDefinitionStoreException e) {
             return;
         }
