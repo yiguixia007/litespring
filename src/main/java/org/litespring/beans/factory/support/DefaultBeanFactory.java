@@ -4,12 +4,13 @@ import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.BeanFactory;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
+import org.litespring.beans.factory.config.SingletonBeanRegistry;
 import org.litespring.util.ClassUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultBeanFactory implements ConfigurableBeanFactory,BeanDefinitionRegistry {
+public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory,BeanDefinitionRegistry {
 
     private ClassLoader beanClassLoader;
 
@@ -36,13 +37,25 @@ public class DefaultBeanFactory implements ConfigurableBeanFactory,BeanDefinitio
         if (bd == null) {
             return null;
         }
+        if(bd.isSingleton()){
+            Object bean = this.getSingleton(beanID);
+            if(bean == null){
+                bean = createBean(bd);
+                this.registerSingleton(beanID, bean);
+            }
+            return bean;
+        }
+        return createBean(bd);
+    }
+
+    private Object createBean(BeanDefinition bd) {
         ClassLoader cl = this.getBeanClassLoader();
         String beanClassName = bd.getBeanClassName();
         try {
             Class<?> clz = cl.loadClass(beanClassName);
             return clz.newInstance();
         } catch (Exception e) {
-            throw new BeanCreationException("create bean for " + beanClassName + " failed", e);
+            throw new BeanCreationException("create bean for "+ beanClassName +" failed",e);
         }
     }
 

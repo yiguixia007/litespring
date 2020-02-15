@@ -6,16 +6,13 @@ import org.junit.Test;
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.BeanDefinitionStoreException;
-import org.litespring.beans.factory.BeanFactory;
 import org.litespring.beans.factory.support.BeanDefinitionRegistry;
 import org.litespring.beans.factory.support.DefaultBeanFactory;
 import org.litespring.beans.factory.xml.XMLBeanDefinitionReader;
 import org.litespring.core.io.ClassPathResource;
 import org.litespring.service.v1.PetStoreService;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class BeanFactoryTest {
     DefaultBeanFactory factory ;
@@ -39,6 +36,12 @@ public class BeanFactoryTest {
         reader.loadBeanDefinitions(new ClassPathResource("petstore-v1.xml"));
         BeanDefinition bd = factory.getBeanDefinition("petStore");
 
+        assertTrue(bd.isSingleton());
+
+        assertFalse(bd.isPrototype());
+
+        assertEquals(BeanDefinition.SCOPE_DEFAULT,bd.getScope());
+
         // 2、判断与xml文件ClassName是否相等
         assertEquals("org.litespring.service.v1.PetStoreService", bd.getBeanClassName());
 
@@ -47,6 +50,10 @@ public class BeanFactoryTest {
 
         // 4、判断实例是否为空
         assertNotNull(petStore);
+
+        PetStoreService petStore1 = (PetStoreService)factory.getBean("petStore");
+
+        assertTrue(petStore.equals(petStore1));
     }
 
     /**
