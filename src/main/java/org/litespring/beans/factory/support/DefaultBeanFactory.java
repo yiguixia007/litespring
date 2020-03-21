@@ -84,14 +84,17 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 
         SimpleTypeConverter converter = new SimpleTypeConverter();
         try {
+
+            // 获取bean的所有属性及方法，并封装成BeanInfo对象
+            BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+            // 获取属性的描述器，也就是类的get方法
+            PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+
             for (PropertyValue pv : pvs) {
                 String propertyName = pv.getName();
                 Object originalValue = pv.getValue();
                 Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue);
-                // 获取bean的所有属性及方法，并封装成BeanInfo对象
-                BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
-                // 获取属性的描述器，也就是类的get方法
-                PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+
                 for (PropertyDescriptor pd : pds) {
                     // 判断配置文件中的名字 <property name="accountDao" ref="accountDao"/> accountDao 中的跟类中的属性名是否相等？
                     if (pd.getName().equals(propertyName)) {
