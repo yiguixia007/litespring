@@ -86,12 +86,15 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
                 String propertyName = pv.getName();
                 Object originalValue = pv.getValue();
                 Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue);
-                // bean的获取所有属性及方法
+                // 获取bean的所有属性及方法，并封装成BeanInfo对象
                 BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+                // 获取属性的描述器，也就是类的get方法
                 PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
                 for (PropertyDescriptor pd : pds) {
+                    // 判断配置文件中的名字 <property name="accountDao" ref="accountDao"/> accountDao 中的跟类中的属性名是否相等？
                     if (pd.getName().equals(propertyName)) {
-                        // 设置bean对象的属性值
+                        // 设置bean对象的属性值 getWriteMethod 就是 AccountDao 的 set 方法
+                        // 此处的反射 就是调用 petStoreService 类中的 setAccountDao方法
                         pd.getWriteMethod().invoke(bean, resolvedValue);
                         break;
                     }

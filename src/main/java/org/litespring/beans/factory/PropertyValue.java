@@ -6,6 +6,11 @@ public class PropertyValue {
 
     private final Object value;
 
+    /**
+     * 是否转换过
+     * true：转换过  value 已转换成 convertedValue
+     * false：未转换 value 未转换成 convertedValue
+     */
     private boolean converted = false;
 
     private Object convertedValue;

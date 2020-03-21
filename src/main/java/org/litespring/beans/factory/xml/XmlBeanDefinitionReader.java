@@ -82,7 +82,7 @@ public class XmlBeanDefinitionReader {
     }
 
     /**
-     * 解析所有property
+     * 解析 bean 标签内所有 property
      * @param beanElem beanElem
      * @param bd bd
      */
@@ -106,7 +106,7 @@ public class XmlBeanDefinitionReader {
     }
 
     /**
-     * 解析 value
+     * 解析 property 标签中 value
      * @param ele ele
      * @param bd bd
      * @param propertyName propertyName

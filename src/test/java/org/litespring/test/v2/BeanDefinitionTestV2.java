@@ -28,6 +28,7 @@ public class BeanDefinitionTestV2 {
         // 3、获取PropertyValue列表
         List<PropertyValue> pvs = bd.getPropertyValues();
 
+        // 因为配置文件里是两个property所以为2
         Assert.assertTrue(pvs.size() == 2);
         {
             // 4、获取accountDao的value的值
