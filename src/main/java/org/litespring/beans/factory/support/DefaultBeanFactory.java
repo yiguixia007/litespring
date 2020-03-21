@@ -1,6 +1,7 @@
 package org.litespring.beans.factory.support;
 
 import org.litespring.beans.BeanDefinition;
+import org.litespring.beans.SimpleTypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.PropertyValue;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
@@ -81,6 +82,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 
         BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
 
+        SimpleTypeConverter converter = new SimpleTypeConverter();
         try {
             for (PropertyValue pv : pvs) {
                 String propertyName = pv.getName();
@@ -95,7 +97,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
                     if (pd.getName().equals(propertyName)) {
                         // 设置bean对象的属性值 getWriteMethod 就是 AccountDao 的 set 方法
                         // 此处的反射 就是调用 petStoreService 类中的 setAccountDao方法
-                        pd.getWriteMethod().invoke(bean, resolvedValue);
+                        Object convertedValue = converter.convertIfNecessary(resolvedValue, pd.getPropertyType());
+                        pd.getWriteMethod().invoke(bean, convertedValue);
                         break;
                     }
                 }

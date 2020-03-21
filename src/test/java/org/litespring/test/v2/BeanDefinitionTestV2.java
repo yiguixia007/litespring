@@ -29,7 +29,7 @@ public class BeanDefinitionTestV2 {
         List<PropertyValue> pvs = bd.getPropertyValues();
 
         // 因为配置文件里是两个property所以为2
-        Assert.assertTrue(pvs.size() == 2);
+        Assert.assertTrue(pvs.size() == 4);
         {
             // 4、获取accountDao的value的值
             PropertyValue pv = this.getPropertyValue("accountDao", pvs);
